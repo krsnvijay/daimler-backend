@@ -19,8 +19,11 @@ from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
+from app import views
+
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
+router.register(r'parts', views.PartViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
