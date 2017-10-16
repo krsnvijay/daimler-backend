@@ -3,4 +3,7 @@
 venv
 .idea/inspectionProfiles/
 .idea/workspace.xml
-templates/
+.idea/daimler_backend.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.urls import reverse
-from import_export import resources, fields, widgets
+from import_export import resources, fields
 
 
 class Part(models.Model):
@@ -11,10 +11,11 @@ class Part(models.Model):
 
     part_number = models.CharField(max_length=30, primary_key=True, help_text='Enter Part Number')
     description = models.CharField(max_length=100, help_text='Enter Part\'s Description')
-    supplier_name = models.EmailField(max_length=50, help_text='Enter Supplier\'s Name')
+    supplier_name = models.CharField(max_length=50, help_text='Enter Supplier\'s Name')
     eta_dicv = models.CharField(max_length=30, help_text='Enter ETA')
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details')
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage')
+    delayed = models.BooleanField(help_text='Check if the part is delayed', default=False)
 
     def __str__(self):
         return self.part_number
