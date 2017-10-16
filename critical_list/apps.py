@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class CriticallistConfig(AppConfig):
-    name = 'critical-list'
+    name = 'critical_list'
