@@ -1,0 +1,1 @@
+web: gunicorn daimler_backend.wsgi --log-file -
