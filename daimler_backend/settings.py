@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.apps.AppConfig',
-    'criticallist.apps.CriticallistConfig',
+    'critical-list.apps.CriticallistConfig',
     'sos.apps.SosConfig',
-    'vehicleloss.apps.VehiclelossConfig',
+    'vehicle-loss.apps.VehiclelossConfig',
     'rest_framework',
 ]
 
