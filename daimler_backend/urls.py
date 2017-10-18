@@ -16,20 +16,26 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from critical_list import views
+from accounts.views import UserViewSet, GroupViewSet
+from critical_list.views import PartViewSet
 from critical_list.views import upload_file
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
-router.register(r'parts', views.PartViewSet)
+router.register(r'parts', PartViewSet)
+router.register(r'users', UserViewSet)
+router.register(r'groups', GroupViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^admin/', admin.site.urls),
     url(r'^schema/$', schema_view),
     url(r'^docs/', include_docs_urls(title='Daimler API Documentation')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', obtain_auth_token),
     url(r'^upload_file/', upload_file, name='upload_file')
 ]
