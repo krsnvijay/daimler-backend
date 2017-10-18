@@ -19,8 +19,8 @@ from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from app import views
-from app.views import upload_file
+from critical_list import views
+from critical_list.views import upload_file
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()

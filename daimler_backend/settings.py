@@ -37,14 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app.apps.AppConfig',
+    'accounts.apps.AccountsConfig',
     'critical_list.apps.CriticallistConfig',
     'sos.apps.SosConfig',
     'vehicle_loss.apps.VehiclelossConfig',
     'rest_framework',
     'import_export',
 ]
-
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',

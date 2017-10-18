@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.models import Part
+from critical_list.models import Part
 
 
 class PartSerializer(serializers.HyperlinkedModelSerializer):
