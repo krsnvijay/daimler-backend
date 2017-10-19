@@ -1,7 +1,7 @@
 # Create your views here.
 # ViewSets define the view behavior.
 from django.contrib.auth.models import User, Group
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
+from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope, OAuth2Authentication
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -19,7 +19,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class CurrentUserViewSet(APIView):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, OAuth2Authentication)
     permission_classes = [IsAuthenticatedOrTokenHasScope]
     # permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     required_scopes = ['users']
