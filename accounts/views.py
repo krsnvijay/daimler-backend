@@ -3,6 +3,9 @@
 from django.contrib.auth.models import User, Group
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from accounts.serializers import GroupSerializer, UserSerializer
 
@@ -13,6 +16,16 @@ class UserViewSet(viewsets.ModelViewSet):
     required_scopes = ['users']
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class CurrentUserViewSet(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    # permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+    required_scopes = ['users']
+
+    def get(self, request):
+        return Response(UserSerializer(request.user).data)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
