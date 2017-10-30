@@ -20,7 +20,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from accounts.views import UserViewSet, GroupViewSet
+from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet
 from critical_list.views import PartViewSet
 from critical_list.views import upload_file
 
@@ -37,5 +37,6 @@ urlpatterns = [
     url(r'^docs/', include_docs_urls(title='Daimler API Documentation')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', obtain_auth_token),
-    url(r'^upload_file/', upload_file, name='upload_file')
+    url(r'^upload_file/', upload_file, name='upload_file'),
+    url(r'^current_user/', CurrentUserViewSet.as_view(), name='current_user'),
 ]
