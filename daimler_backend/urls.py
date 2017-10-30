@@ -23,12 +23,14 @@ from rest_framework.schemas import get_schema_view
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet
 from critical_list.views import PartViewSet
 from critical_list.views import upload_file
+from sos.views import SosViewSet
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
 router.register(r'parts', PartViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
+router.register(r'sos',SosViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
