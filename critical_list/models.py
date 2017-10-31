@@ -1,35 +1,37 @@
 # Create your models here.
-from django.db import models
+from datetime import datetime
 
+from django.db import models
 # Create your models here.
 from django.urls import reverse
 from import_export import resources, fields
-from datetime import datetime
+
 
 class Part(models.Model):
     class Meta:
         ordering = ["-part_number"]
-    reported_on= models.DateField(max_length=30,help_text='Reported on',default=datetime.now)
-    short_on= models.DateField(max_length=30,help_text='Short on',default=datetime.now)
-    shop= models.CharField(max_length=30,help_text='Enter Text')
-    variants=models.CharField(max_length=30,help_text='Enter Variants')
-    count= models.IntegerField(help_text='Enter count')
     part_number = models.CharField(max_length=30, primary_key=True, help_text='Enter Part Number')
     description = models.CharField(max_length=100, help_text='Enter Part\'s Description')
     supplier_name = models.CharField(max_length=50, help_text='Enter Supplier\'s Name')
-    pmc=models.CharField(max_length=20,help_text='Enter PMC')
-    team= models.CharField(max_length=20,help_text='Enter Team')
-    backlog= models.CharField(max_length=10,help_text='Enter Backlog')
-    region= models.CharField(max_length=10,help_text='Enter Region')
-    unloading_point= models.CharField(max_length=5,help_text='Enter Unloading Point')
-    p_q= models.CharField(max_length=1,help_text='Enter P Q')
-    quantity= models.IntegerField(help_text='Enter Quantity Avl DICV')
-    quantity_expected= models.CharField(max_length=20,help_text='Enter quantity expected')
-    planned_vehicle_qty= models.CharField(max_length=10,help_text='Enter planned vehicle quantity')
+    variants = models.CharField(max_length=30, help_text='Enter Variants')
+    count = models.IntegerField(help_text='Enter count')
+    reported_on = models.DateField(max_length=30, help_text='Reported on', default=datetime.now)
+    short_on = models.DateField(max_length=30, help_text='Short on', default=datetime.now)
+    shop = models.CharField(max_length=30, help_text='Enter Text')
+    pmc = models.CharField(max_length=20, help_text='Enter PMC')
+    team = models.CharField(max_length=20, help_text='Enter Team')
+    backlog = models.CharField(max_length=10, help_text='Enter Backlog')
+    region = models.CharField(max_length=10, help_text='Enter Region')
+    unloading_point = models.CharField(max_length=5, help_text='Enter Unloading Point')
+    p_q = models.CharField(max_length=1, help_text='Enter P Q')
+    quantity = models.IntegerField(help_text='Enter Quantity Avl DICV')
+    quantity_expected = models.IntegerField(help_text='Enter quantity expected')
+    planned_vehicle_qty = models.IntegerField(help_text='Enter planned vehicle quantity')
     eta_dicv = models.CharField(max_length=30, help_text='Enter ETA')
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details')
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage')
     delayed = models.BooleanField(help_text='Check if the part is delayed', default=False)
+    starred = models.BooleanField(help_text='Check if the part is Starred', default=False)
 
     def __str__(self):
         return self.part_number

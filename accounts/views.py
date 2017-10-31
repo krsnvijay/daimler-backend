@@ -1,12 +1,13 @@
 # Create your views here.
 # ViewSets define the view behavior.
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope, OAuth2Authentication
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import User
 from accounts.serializers import GroupSerializer, UserSerializer
 
 
