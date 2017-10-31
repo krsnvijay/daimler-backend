@@ -2,6 +2,7 @@ import openpyxl
 from django.http import JsonResponse
 from django.shortcuts import render
 # Create your views here.
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
 
 from critical_list.forms import UploadFileForm
@@ -12,6 +13,8 @@ from critical_list.serailizers import PartSerializer
 class PartViewSet(viewsets.ModelViewSet):
     queryset = Part.objects.all()
     serializer_class = PartSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('variants', 'delayed', 'starred')
 
 
 def handle_uploaded_file(f):
