@@ -78,7 +78,7 @@ class CriticalListViewSet(APIView):
                 o = {}
                 o['parts'] = PartSerializer(q.filter(short_on=date, shop=shop), many=True,
                                             context={'request': request}).data
-                o['delayed'] = q.filter(short_on=date, delayed=True).count()
-                o['starred'] = q.filter(short_on=date, starred=True).count()
+                o['delayed'] = q.filter(short_on=date, shop=shop, delayed=True).count()
+                o['starred'] = q.filter(short_on=date, shop=shop, starred=True).count()
                 x[shop][date] = o
         return Response(x)
