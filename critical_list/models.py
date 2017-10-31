@@ -8,6 +8,8 @@ from import_export import resources, fields
 
 
 class Part(models.Model):
+    values = ('MDT ENGINE', 'MDT ENGINE'), ('HDT ENGINE', 'HDT ENGINE'), ('TRANSMISSION', 'TRANSMISSION'), (
+    'CASTING AND FORGING', 'CASTING AND FORGING')
     class Meta:
         ordering = ["-part_number"]
     part_number = models.CharField(max_length=30, primary_key=True, help_text='Enter Part Number')
@@ -17,7 +19,7 @@ class Part(models.Model):
     count = models.IntegerField(help_text='Enter count')
     reported_on = models.DateField(max_length=30, help_text='Reported on', default=datetime.now)
     short_on = models.DateField(max_length=30, help_text='Short on', default=datetime.now)
-    shop = models.CharField(max_length=30, help_text='Enter Text')
+    shop = models.CharField(max_length=30, choices=values, help_text='Enter Text')
     pmc = models.CharField(max_length=20, help_text='Enter PMC')
     team = models.CharField(max_length=20, help_text='Enter Team')
     backlog = models.CharField(max_length=10, help_text='Enter Backlog')
