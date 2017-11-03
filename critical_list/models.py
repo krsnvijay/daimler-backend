@@ -8,10 +8,17 @@ from import_export import resources, fields
 
 
 class Part(models.Model):
-    values = ('MDT ENGINE', 'MDT ENGINE'), ('HDT ENGINE', 'HDT ENGINE'), ('TRANSMISSION', 'TRANSMISSION'), (
-    'CASTING AND FORGING', 'CASTING AND FORGING')
+    values = (('MDT ENGINE', 'MDT ENGINE'), ('HDT ENGINE', 'HDT ENGINE'), ('TRANSMISSION', 'TRANSMISSION'), (
+        'CASTING AND FORGING', 'CASTING AND FORGING'), ('AXLE', 'AXLE'))
+    CRITICAL = 'Critical'
+    WARNING = 'Warning'
+    statusvalues = (
+        (CRITICAL, 'Critical'),
+        (WARNING, 'Warning'))
+
     class Meta:
         ordering = ["-part_number"]
+
     part_number = models.CharField(max_length=30, primary_key=True, help_text='Enter Part Number')
     description = models.CharField(max_length=100, help_text='Enter Part\'s Description')
     supplier_name = models.CharField(max_length=50, help_text='Enter Supplier\'s Name')
@@ -32,7 +39,7 @@ class Part(models.Model):
     eta_dicv = models.CharField(max_length=30, help_text='Enter ETA')
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details')
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage')
-    delayed = models.BooleanField(help_text='Check if the part is delayed', default=False)
+    status = models.CharField(max_length=10, choices=statusvalues, help_text='Select the part Status', blank=True)
     starred = models.BooleanField(help_text='Check if the part is Starred', default=False)
 
     def __str__(self):

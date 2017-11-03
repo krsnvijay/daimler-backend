@@ -21,7 +21,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet
-from critical_list.views import PartViewSet, CriticalListViewSet
+from critical_list.views import PartViewSet, CriticalListViewSet, CriticalDetailViewSet
 from critical_list.views import upload_file
 from sos.views import SosViewSet, CommentViewSet
 
@@ -37,10 +37,11 @@ urlpatterns = [
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^admin/', admin.site.urls),
     url(r'^schema/$', schema_view),
-    url(r'^docs/', include_docs_urls(title='Daimler API Documentation')),
+    url(r'^docs/', include_docs_urls(title='Daimler API Documentation', public=False)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', obtain_auth_token),
     url(r'^upload_file/', upload_file, name='upload_file'),
     url(r'^current_user/', CurrentUserViewSet.as_view(), name='current_user'),
-    url(r'^critical_list/', CriticalListViewSet.as_view(), name='critical_list'),
+    url(r'^critical_list/$', CriticalListViewSet.as_view()),
+    url('^critical_list/(?P<shop>.+)/$', CriticalDetailViewSet.as_view()),
 ]

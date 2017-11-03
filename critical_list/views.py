@@ -1,7 +1,7 @@
 import datetime
 
 import openpyxl
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import render
 # Create your views here.
 from django_filters import rest_framework as filters
@@ -21,7 +21,7 @@ class PartFilter(filters.FilterSet):
 
     class Meta:
         model = Part
-        fields = ['shop', 'delayed', 'starred', 'daterange']
+        fields = ['shop', 'status', 'starred', 'daterange']
 
 
 class PartViewSet(viewsets.ModelViewSet):
@@ -61,24 +61,54 @@ def upload_file(request):
     return render(request, 'upload.html', {'form': form})
 
 
+shopvalues = 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
+
+
 class CriticalListViewSet(APIView):
     authentication_classes = (TokenAuthentication, OAuth2Authentication)
     permission_classes = [IsAuthenticatedOrTokenHasScope]
 
-    def get(self, request):
+    def get(self, request, format=None):
         q = Part.objects.all()
         today = datetime.datetime.today()
         x = {}
         days = [today.strftime('%Y-%m-%d'), (today + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
                 (today + datetime.timedelta(days=2)).strftime('%Y-%m-%d')]
 
-        for shop in 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING':
+        for shop in shopvalues:
             x[shop] = {}
             for date in days:
                 o = {}
                 o['parts'] = PartSerializer(q.filter(short_on=date, shop=shop), many=True,
                                             context={'request': request}).data
-                o['delayed'] = q.filter(short_on=date, shop=shop, delayed=True).count()
+                o['critical'] = q.filter(short_on=date, shop=shop, status='Critical').count()
+                o['warning'] = q.filter(short_on=date, shop=shop, status='Warning').count()
                 o['starred'] = q.filter(short_on=date, shop=shop, starred=True).count()
                 x[shop][date] = o
         return Response(x)
+
+
+class CriticalDetailViewSet(APIView):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+
+    def get(self, request, shop, format=None):
+        query_set = Part.objects.all()
+        today = datetime.datetime.today()
+        print(shop)
+        if shop in shopvalues:
+            x = {}
+            days = [today.strftime('%Y-%m-%d'), (today + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
+                    (today + datetime.timedelta(days=2)).strftime('%Y-%m-%d')]
+            for date in days:
+                o = {}
+                o['parts'] = PartSerializer(query_set.filter(short_on=date, shop=shop), many=True,
+                                            context={'request': request}).data
+                o['critical'] = query_set.filter(short_on=date, shop=shop, status='Critical').count()
+                o['warning'] = query_set.filter(short_on=date, shop=shop, status='Warning').count()
+                o['starred'] = query_set.filter(short_on=date, shop=shop, starred=True).count()
+                x[date] = o
+
+            return Response(x)
+        else:
+            raise Http404
