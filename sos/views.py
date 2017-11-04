@@ -1,6 +1,8 @@
 # Create your views here.
 from django_filters import rest_framework as filters
-from rest_framework import viewsets
+
+from rest_framework import viewsets, views
+from rest_framework.parsers import MultiPartParser
 
 from sos.models import Sos, Comment
 from sos.serializers import SoSSerializer, CommentSerializer
@@ -18,3 +20,11 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('uid', 'sosid', 'date')
+
+class FileUpload(views.APIView):
+    parser_classes = (MultiPartParser,)
+
+    def post(self,request,format=None):
+        serializer = SoSSerializer(data=request.DATA)
+        file= request.data['media']
+        serializer.save(file)

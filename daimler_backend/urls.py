@@ -19,11 +19,12 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
-
+from django.conf import settings
+from django.conf.urls.static import static
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet
 from critical_list.views import PartViewSet, CriticalListViewSet, CriticalDetailViewSet
 from critical_list.views import upload_file
-from sos.views import SosViewSet, CommentViewSet
+from sos.views import SosViewSet, CommentViewSet, FileUpload
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
@@ -44,4 +45,8 @@ urlpatterns = [
     url(r'^current_user/', CurrentUserViewSet.as_view(), name='current_user'),
     url(r'^critical_list/$', CriticalListViewSet.as_view()),
     url('^critical_list/(?P<shop>.+)/$', CriticalDetailViewSet.as_view()),
+
+    url('^uploooadfile/', FileUpload.as_view()),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
