@@ -65,6 +65,9 @@ shopvalues = 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 
 
 
 class CriticalListViewSet(APIView):
+    """
+    get: List all the critical list parts upto 3 days.
+    """
     authentication_classes = (TokenAuthentication, OAuth2Authentication)
     permission_classes = [IsAuthenticatedOrTokenHasScope]
 
@@ -89,6 +92,10 @@ class CriticalListViewSet(APIView):
 
 
 class CriticalDetailViewSet(APIView):
+    """
+    shop:'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
+    get:Returns critical list of a particualr shop type
+    """
     authentication_classes = (TokenAuthentication, OAuth2Authentication)
     permission_classes = [IsAuthenticatedOrTokenHasScope]
 

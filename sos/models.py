@@ -13,8 +13,8 @@ class Sos(models.Model):
 
     name = models.CharField(max_length=50, help_text="Name")
     content = models.CharField(max_length=100, help_text="Enter Content")
-    media = models.FileField(help_text="Media", upload_to='media/content/%Y/%m/%d/', blank=True)
-    date = models.DateField(max_length=30, help_text="Date", default=datetime.now)
+    media = models.FileField(help_text="Media", upload_to='content/%Y/%m/%d/', blank=True)
+    date = models.DateTimeField(max_length=30, help_text="Date", default=datetime.now)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, max_length=30, help_text="Uid", related_name='owner')
     users = models.ManyToManyField(User, help_text="Employee Involved", related_name='employee_involved')
     level = models.IntegerField(help_text="Enter Level")
@@ -36,9 +36,9 @@ class Comment(models.Model):
 
     uid = models.ForeignKey(User, on_delete=models.CASCADE)
     sosid = models.ForeignKey(Sos, on_delete=models.CASCADE)
-    date = models.DateTimeField(help_text="Enter Level")
+    date = models.DateTimeField(help_text="Enter Level", default=datetime.now)
     content = models.CharField(max_length=100, help_text="Enter Content")
-    media = models.FileField(help_text="Media", upload_to='media/comment/%Y/%m/%d/', blank=True)
+    media = models.FileField(help_text="Media", upload_to='comment/%Y/%m/%d/', blank=True)
 
     def __str__(self):
         return str(self.id)
