@@ -21,7 +21,7 @@ class PartFilter(filters.FilterSet):
 
     class Meta:
         model = Part
-        fields = ['shop', 'status', 'starred', 'daterange']
+        fields = ['shop', 'status', 'daterange']
 
 
 class PartViewSet(viewsets.ModelViewSet):
@@ -86,7 +86,6 @@ class CriticalListViewSet(APIView):
                                             context={'request': request}).data
                 o['critical'] = q.filter(short_on=date, shop=shop, status='Critical').count()
                 o['warning'] = q.filter(short_on=date, shop=shop, status='Warning').count()
-                o['starred'] = q.filter(short_on=date, shop=shop, starred=True).count()
                 x[shop][date] = o
         return Response(x)
 
@@ -113,7 +112,6 @@ class CriticalDetailViewSet(APIView):
                                             context={'request': request}).data
                 o['critical'] = query_set.filter(short_on=date, shop=shop, status='Critical').count()
                 o['warning'] = query_set.filter(short_on=date, shop=shop, status='Warning').count()
-                o['starred'] = query_set.filter(short_on=date, shop=shop, starred=True).count()
                 x[date] = o
 
             return Response(x)

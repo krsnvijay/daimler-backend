@@ -5,11 +5,11 @@ from rest_framework import serializers
 from accounts.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
     class Meta:
         model = User
-        fields = '__all__'
-
+        exclude = ('password', 'last_login', 'date_joined', 'user_permissions', 'is_staff', 'is_active', 'is_superuser')
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:

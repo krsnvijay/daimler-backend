@@ -15,7 +15,7 @@ class Sos(models.Model):
     content = models.CharField(max_length=100, help_text="Enter Content")
     media = models.FileField(help_text="Media", upload_to='content/%Y/%m/%d/', blank=True)
     date = models.DateTimeField(max_length=30, help_text="Date", default=datetime.now)
-    posted_by = models.ForeignKey(User, on_delete=models.CASCADE, max_length=30, help_text="Uid", related_name='owner')
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Original Poster", related_name='post_by')
     users = models.ManyToManyField(User, help_text="Employee Involved", related_name='employee_involved')
     level = models.IntegerField(help_text="Enter Level")
     status = models.BooleanField(help_text="Open Or Closed", default=True)
@@ -27,14 +27,15 @@ class Sos(models.Model):
         """
         Returns the url to access a particular instance of MyModelName.
         """
-        return reverse('model-detail-view', args=[str(self.id)])
+        return reverse('sos-detail', args=[str(self.id)])
 
 
 class Comment(models.Model):
     class Meta:
-        ordering = ["-uid"]
+        ordering = ["-posted_by"]
 
-    uid = models.ForeignKey(User, on_delete=models.CASCADE)
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Original Poster",
+                                  related_name='comment_by')
     sosid = models.ForeignKey(Sos, on_delete=models.CASCADE)
     date = models.DateTimeField(help_text="Enter Level", default=datetime.now)
     content = models.CharField(max_length=100, help_text="Enter Content")
@@ -47,4 +48,4 @@ class Comment(models.Model):
         """
         Returns the url to access a particular instance of MyModelName.
         """
-        return reverse('model-detail-view', args=[str(self.id)])
+        return reverse('comment-detail', args=[str(self.id)])

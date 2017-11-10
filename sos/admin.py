@@ -11,7 +11,7 @@ class CommentInline(admin.TabularInline):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     search_fields = ['uid', ]
-    list_display = 'id', 'uid', 'content', 'date'
+    list_display = 'id', 'posted_by', 'content', 'date'
 
 
 @admin.register(Sos)

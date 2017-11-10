@@ -12,9 +12,12 @@ class Part(models.Model):
         'CASTING AND FORGING', 'CASTING AND FORGING'), ('AXLE', 'AXLE'))
     CRITICAL = 'Critical'
     WARNING = 'Warning'
+    NORMAL = 'Normal'
     statusvalues = (
+        (NORMAL, 'Normal'),
+        (WARNING, 'Warning'),
         (CRITICAL, 'Critical'),
-        (WARNING, 'Warning'))
+    )
 
     class Meta:
         ordering = ["-part_number"]
@@ -40,7 +43,6 @@ class Part(models.Model):
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details')
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage')
     status = models.CharField(max_length=10, choices=statusvalues, help_text='Select the part Status', blank=True)
-    starred = models.BooleanField(help_text='Check if the part is Starred', default=False)
 
     def __str__(self):
         return self.part_number
@@ -49,7 +51,7 @@ class Part(models.Model):
         """
         Returns the url to access a particular instance of MyModelName.
         """
-        return reverse('model-detail-view', args=[str(self.part_number)])
+        return reverse('part-detail', args=[str(self.part_number)])
 
 
 class PartResource(resources.ModelResource):

@@ -42,10 +42,11 @@ urlpatterns = [
     url(r'^docs/', include_docs_urls(title='Daimler API Documentation', public=False)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', obtain_auth_token),
-    url(r'^upload_file/', upload_file, name='upload_file'),
-    url(r'^current_user/', CurrentUserViewSet.as_view(), name='current_user'),
+    url(r'^upload_file/$', upload_file, name='upload_file'),
+    url(r'^current_user/$', CurrentUserViewSet.as_view(), name='current_user'),
     url(r'^critical_list/$', CriticalListViewSet.as_view()),
     url('^critical_list/(?P<shop>.+)/$', CriticalDetailViewSet.as_view()),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
