@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'import_export',
     'corsheaders',
+    'storages',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
@@ -158,3 +159,16 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_REGION_NAME = 'nyc3'
+AWS_LOCATION = 'media'
+AWS_DEFAULT_ACL = 'private'
+AWS_ACCESS_KEY_ID = 'ZRGCS5JOIGU4TG7W5GXE'
+AWS_SECRET_ACCESS_KEY = 'w0YrPYwFtIN+zj+b/EQEuPeuqyv7QSx2XaAm7wtMj64'
+AWS_STORAGE_BUCKET_NAME = 'daimler-storage'
+AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+# AWS_S3_CUSTOM_DOMAIN = '%s.nyc3.digitaloceanspaces.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_S3_SIGNATURE_VERSION = 's3v4'

@@ -22,7 +22,7 @@ class SoSSerializer(serializers.HyperlinkedModelSerializer):
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
-    uid = serializers.HyperlinkedRelatedField(
+    posted_by = serializers.HyperlinkedRelatedField(
         read_only=True,
         view_name='user-detail',
         default=serializers.CurrentUserDefault()
