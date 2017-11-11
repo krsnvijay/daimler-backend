@@ -1,5 +1,6 @@
 # Create your views here.
 # ViewSets define the view behavior.
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group
 from django.http import Http404
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope, OAuth2Authentication
@@ -10,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import User
-from accounts.serializers import GroupSerializer, UserSerializer
+from accounts.serializers import GroupSerializer, UserSerializer, LogEntrySerializer
 from critical_list.models import Part
 
 
@@ -28,6 +29,13 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+
+class LogEntryViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]
+    # permission_classes = [permissions.IsAuthenticated, TokenHasScope]
+    required_scopes = ['users']
+    queryset = LogEntry.objects.all()
+    serializer_class = LogEntrySerializer
 
 class CurrentUserViewSet(APIView):
     authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)

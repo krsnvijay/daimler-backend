@@ -1,3 +1,4 @@
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
@@ -14,4 +15,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
+        fields = '__all__'
+
+
+class LogEntrySerializer(serializers.HyperlinkedModelSerializer):
+    content_type = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='model'
+    )
+
+    class Meta:
+        model = LogEntry
         fields = '__all__'

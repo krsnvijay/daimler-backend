@@ -22,7 +22,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet
+from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet
 from critical_list.views import PartViewSet, CriticalListViewSet, CriticalDetailViewSet
 from critical_list.views import upload_file
 from sos.views import SosViewSet, CommentViewSet
@@ -34,6 +34,7 @@ router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'sos',SosViewSet)
 router.register(r'comments', CommentViewSet)
+router.register(r'logs', LogEntryViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),

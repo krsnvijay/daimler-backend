@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
@@ -77,5 +78,26 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class LogEntryAdmin(admin.ModelAdmin):
+    list_filter = [
+        'user',
+        'content_type',
+        'action_flag'
+    ]
+
+    search_fields = [
+        'object_repr',
+        'change_message'
+    ]
+
+    list_display = [
+        'action_time',
+        'user',
+        'content_type',
+        'action_flag',
+        'change_message',
+    ]
+
 
 admin.site.register(User, UserAdmin)
+admin.site.register(LogEntry, LogEntryAdmin)
