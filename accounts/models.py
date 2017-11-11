@@ -21,7 +21,7 @@ class User(AbstractUser):
         return self.first_name + ' ' + self.last_name
 
     def __str__(self):
-        return self.get_full_name()
+        return self.username
 
     def get_absolute_url(self):
         """
