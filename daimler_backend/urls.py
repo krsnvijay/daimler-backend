@@ -22,7 +22,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet
+from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
 from critical_list.views import PartViewSet, CriticalListViewSet, CriticalDetailViewSet
 from critical_list.views import upload_file
 from sos.views import SosViewSet, CommentViewSet
@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'^api-token-auth/', obtain_auth_token),
     url(r'^upload_file/$', upload_file, name='upload_file'),
     url(r'^current_user/$', CurrentUserViewSet.as_view(), name='current_user'),
+    url(r'^current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
     url(r'^critical_list/$', CriticalListViewSet.as_view()),
     url('^critical_list/(?P<shop>.+)/$', CriticalDetailViewSet.as_view()),
 

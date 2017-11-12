@@ -5,9 +5,11 @@ from django.http import JsonResponse, Http404
 from django.shortcuts import render
 # Create your views here.
 from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication, IsAuthenticatedOrTokenHasScope
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,20 +18,24 @@ from critical_list.models import Part
 from critical_list.serailizers import PartSerializer
 
 
+def get_starred_parts(request):
+    user = request.user
+    return user.starred_parts.all()
 class PartFilter(filters.FilterSet):
     daterange = filters.DateFromToRangeFilter(name="short_on")
-
     class Meta:
         model = Part
-        fields = ['shop', 'status', 'daterange']
+        fields = ['shop', 'status', 'daterange', 'short_on']
+
 
 
 class PartViewSet(viewsets.ModelViewSet):
     queryset = Part.objects.all()
     serializer_class = PartSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    search_fields = ('part_number',)
+    ordering_fields = ('shop', 'short_on', 'status')
     filter_class = PartFilter
-
 
 def handle_uploaded_file(f):
     wb = openpyxl.load_workbook(f)
@@ -84,8 +90,8 @@ class CriticalListViewSet(APIView):
                 o = {}
                 o['parts'] = PartSerializer(q.filter(short_on=date, shop=shop), many=True,
                                             context={'request': request}).data
-                o['critical'] = q.filter(short_on=date, shop=shop, status='Critical').count()
-                o['warning'] = q.filter(short_on=date, shop=shop, status='Warning').count()
+                o['critical'] = q.filter(short_on=date, shop=shop, status=3).count()
+                o['warning'] = q.filter(short_on=date, shop=shop, status=2).count()
                 x[shop][date] = o
         return Response(x)
 
@@ -110,8 +116,8 @@ class CriticalDetailViewSet(APIView):
                 o = {}
                 o['parts'] = PartSerializer(query_set.filter(short_on=date, shop=shop), many=True,
                                             context={'request': request}).data
-                o['critical'] = query_set.filter(short_on=date, shop=shop, status='Critical').count()
-                o['warning'] = query_set.filter(short_on=date, shop=shop, status='Warning').count()
+                o['critical'] = query_set.filter(short_on=date, shop=shop, status=3).count()
+                o['warning'] = query_set.filter(short_on=date, shop=shop, status=2).count()
                 x[date] = o
 
             return Response(x)

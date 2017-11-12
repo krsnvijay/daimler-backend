@@ -10,9 +10,9 @@ from import_export import resources, fields
 class Part(models.Model):
     values = (('MDT ENGINE', 'MDT ENGINE'), ('HDT ENGINE', 'HDT ENGINE'), ('TRANSMISSION', 'TRANSMISSION'), (
         'CASTING AND FORGING', 'CASTING AND FORGING'), ('AXLE', 'AXLE'))
-    CRITICAL = 'Critical'
-    WARNING = 'Warning'
-    NORMAL = 'Normal'
+    CRITICAL = 3
+    WARNING = 2
+    NORMAL = 1
     statusvalues = (
         (NORMAL, 'Normal'),
         (WARNING, 'Warning'),
@@ -42,7 +42,7 @@ class Part(models.Model):
     eta_dicv = models.CharField(max_length=30, help_text='Enter ETA')
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details')
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage')
-    status = models.CharField(max_length=10, choices=statusvalues, help_text='Select the part Status', blank=True)
+    status = models.IntegerField(choices=statusvalues, help_text='Select the part Status', default=NORMAL)
 
     def __str__(self):
         return self.part_number

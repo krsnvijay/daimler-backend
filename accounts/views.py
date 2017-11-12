@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from accounts.models import User
 from accounts.serializers import GroupSerializer, UserSerializer, LogEntrySerializer
 from critical_list.models import Part
+from critical_list.serailizers import PartSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -46,16 +47,26 @@ class CurrentUserViewSet(APIView):
     def get(self, request):
         return Response(UserSerializer(request.user, context={'request': request}).data)
 
+
+class StarredPartsViewSet(APIView):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    # permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+    required_scopes = ['users']
+
+    def get(self, request):
+        return Response(PartSerializer(request.user.starred_parts, context={'request': request}, many=True).data)
+
     def patch(self, request):
         try:
             request.user.starred_parts.add(Part.objects.get(part_number=request.data['part_number']))
-            return Response(UserSerializer(request.user, context={'request': request}).data)
+            return Response(PartSerializer(request.user.starred_parts, context={'request': request}, many=True).data)
         except Part.DoesNotExist:
             raise Http404
 
     def delete(self, request):
         try:
             request.user.starred_parts.remove(Part.objects.get(part_number=request.data['part_number']))
-            return Response(UserSerializer(request.user, context={'request': request}).data)
+            return Response(PartSerializer(request.user.starred_parts, context={'request': request}, many=True).data)
         except Part.DoesNotExist:
             raise Http404
