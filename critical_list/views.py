@@ -1,5 +1,3 @@
-import datetime
-
 import openpyxl
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
@@ -8,34 +6,41 @@ from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication, IsAuthenticatedOrTokenHasScope
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.filters import OrderingFilter
+from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from critical_list.forms import UploadFileForm
 from critical_list.models import Part
+from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
 
 
 def get_starred_parts(request):
     user = request.user
     return user.starred_parts.all()
+
+
 class PartFilter(filters.FilterSet):
     daterange = filters.DateFromToRangeFilter(name="short_on")
+
     class Meta:
         model = Part
         fields = ['shop', 'status', 'daterange', 'short_on']
 
 
-
 class PartViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]
     queryset = Part.objects.all()
     serializer_class = PartSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     search_fields = ('part_number',)
     ordering_fields = ('shop', 'short_on', 'status')
     filter_class = PartFilter
+
 
 def handle_uploaded_file(f):
     wb = openpyxl.load_workbook(f)
@@ -67,59 +72,18 @@ def upload_file(request):
     return render(request, 'upload.html', {'form': form})
 
 
-shopvalues = 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
+class PartStatusChangeViewSet(APIView):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope, IsManagerOrReadOnly]
 
-
-class CriticalListViewSet(APIView):
-    """
-    get: List all the critical list parts upto 3 days.
-    """
-    authentication_classes = (TokenAuthentication, OAuth2Authentication)
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
-
-    def get(self, request, format=None):
-        q = Part.objects.all()
-        today = datetime.datetime.today()
-        x = {}
-        days = [today.strftime('%Y-%m-%d'), (today + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
-                (today + datetime.timedelta(days=2)).strftime('%Y-%m-%d')]
-
-        for shop in shopvalues:
-            x[shop] = {}
-            for date in days:
-                o = {}
-                o['parts'] = PartSerializer(q.filter(short_on=date, shop=shop), many=True,
-                                            context={'request': request}).data
-                o['critical'] = q.filter(short_on=date, shop=shop, status=3).count()
-                o['warning'] = q.filter(short_on=date, shop=shop, status=2).count()
-                x[shop][date] = o
-        return Response(x)
-
-
-class CriticalDetailViewSet(APIView):
-    """
-    shop:'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
-    get:Returns critical list of a particualr shop type
-    """
-    authentication_classes = (TokenAuthentication, OAuth2Authentication)
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
-
-    def get(self, request, shop, format=None):
-        query_set = Part.objects.all()
-        today = datetime.datetime.today()
-        print(shop)
-        if shop in shopvalues:
-            x = {}
-            days = [today.strftime('%Y-%m-%d'), (today + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
-                    (today + datetime.timedelta(days=2)).strftime('%Y-%m-%d')]
-            for date in days:
-                o = {}
-                o['parts'] = PartSerializer(query_set.filter(short_on=date, shop=shop), many=True,
-                                            context={'request': request}).data
-                o['critical'] = query_set.filter(short_on=date, shop=shop, status=3).count()
-                o['warning'] = query_set.filter(short_on=date, shop=shop, status=2).count()
-                x[date] = o
-
-            return Response(x)
-        else:
+    def patch(self, request, pk, format=None):
+        try:
+            obj = Part.objects.get(pk=pk)
+            serializer = PartSerializer(obj, data=request.data, context={'request': request}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)
+        except Part.DoesNotExist:
             raise Http404

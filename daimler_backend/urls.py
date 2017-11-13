@@ -23,9 +23,9 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
-from critical_list.views import PartViewSet, CriticalListViewSet, CriticalDetailViewSet
+from critical_list.views import PartViewSet, PartStatusChangeViewSet
 from critical_list.views import upload_file
-from sos.views import SosViewSet, CommentViewSet
+from sos.views import SosViewSet, CommentViewSet, SosStatusChangeViewSet
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
@@ -46,8 +46,8 @@ urlpatterns = [
     url(r'^upload_file/$', upload_file, name='upload_file'),
     url(r'^current_user/$', CurrentUserViewSet.as_view(), name='current_user'),
     url(r'^current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
-    url(r'^critical_list/$', CriticalListViewSet.as_view()),
-    url('^critical_list/(?P<shop>.+)/$', CriticalDetailViewSet.as_view()),
+    url('^parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),
+    url('^sos/(?P<pk>[^/.]+)/change_status/$', SosStatusChangeViewSet.as_view()),
 
 ]
 if settings.DEBUG:

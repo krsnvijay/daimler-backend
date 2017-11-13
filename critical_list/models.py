@@ -21,6 +21,9 @@ class Part(models.Model):
 
     class Meta:
         ordering = ["-part_number"]
+        permissions = (
+            ("can_change_status", "Can Change Status"),
+        )
 
     part_number = models.CharField(max_length=30, primary_key=True, help_text='Enter Part Number')
     description = models.CharField(max_length=100, help_text='Enter Part\'s Description')

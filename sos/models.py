@@ -10,6 +10,9 @@ from accounts.models import User
 class Sos(models.Model):
     class Meta:
         ordering = ["-id"]
+        permissions = (
+            ("can_change_status", "Can Change Status"),
+        )
 
     name = models.CharField(max_length=50, help_text="Name")
     content = models.CharField(max_length=100, help_text="Enter Content")
