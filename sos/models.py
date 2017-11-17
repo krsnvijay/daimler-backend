@@ -19,7 +19,7 @@ class Sos(models.Model):
     media = models.FileField(help_text="Media", upload_to='content/%Y/%m/%d/', blank=True)
     date = models.DateTimeField(max_length=30, help_text="Date", default=datetime.now)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Original Poster", related_name='post_by')
-    users = models.ManyToManyField(User, help_text="Employee Involved", related_name='employee_involved')
+    users = models.ManyToManyField(User, help_text="Employee Involved", related_name='employee_involved', blank=True)
     level = models.IntegerField(help_text="Enter Level")
     status = models.BooleanField(help_text="Open Or Closed", default=True)
 

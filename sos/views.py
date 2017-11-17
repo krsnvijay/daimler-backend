@@ -49,3 +49,17 @@ class SosStatusChangeViewSet(APIView):
                 return Response(serializer.errors)
         except Sos.DoesNotExist:
             raise Http404
+
+
+class SosSubscribeViewSet(APIView):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+
+    def patch(self, request, pk):
+        obj = Sos.objects.get(pk=pk)
+        if obj.users.filter(id=request.user.id).exists():
+            obj.users.remove(request.user)
+            return Response({'detail': 'Un-Subscribed'})
+        else:
+            obj.users.add(request.user)
+        return Response({'detail': 'Subscribed'})

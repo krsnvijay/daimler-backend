@@ -25,7 +25,7 @@ from rest_framework.schemas import get_schema_view
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
 from critical_list.views import PartViewSet, PartStatusChangeViewSet
 from critical_list.views import upload_file
-from sos.views import SosViewSet, CommentViewSet, SosStatusChangeViewSet
+from sos.views import SosViewSet, CommentViewSet, SosStatusChangeViewSet, SosSubscribeViewSet
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
@@ -48,6 +48,7 @@ urlpatterns = [
     url(r'^current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
     url('^parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),
     url('^sos/(?P<pk>[^/.]+)/change_status/$', SosStatusChangeViewSet.as_view()),
+    url('^sos/(?P<pk>[^/.]+)/subscribe/$', SosSubscribeViewSet.as_view()),
 
 ]
 if settings.DEBUG:
