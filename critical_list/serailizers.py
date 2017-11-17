@@ -4,7 +4,7 @@ from critical_list.models import Part
 
 
 class PartSerializer(serializers.HyperlinkedModelSerializer):
-    part_number = serializers.ReadOnlyField()
+    part_number = serializers.CharField(max_length=30, required=True)
     starred = serializers.SerializerMethodField()
     class Meta:
         model = Part
