@@ -17,13 +17,14 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from push_notifications.api.rest_framework import GCMDeviceAuthorizedViewSet
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
-from critical_list.views import PartViewSet, PartStatusChangeViewSet
+from critical_list.views import PartViewSet, PartStatusChangeViewSet, CriticalListViewSet
 from critical_list.views import upload_file
 from sos.views import SosViewSet, CommentViewSet, SosStatusChangeViewSet, SosSubscribeViewSet
 
@@ -35,6 +36,7 @@ router.register(r'groups', GroupViewSet)
 router.register(r'sos',SosViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'logs', LogEntryViewSet)
+router.register(r'device/gcm', GCMDeviceAuthorizedViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
@@ -45,6 +47,7 @@ urlpatterns = [
     url(r'^api-token-auth/', obtain_auth_token),
     url(r'^upload_file/$', upload_file, name='upload_file'),
     url(r'^current_user/$', CurrentUserViewSet.as_view(), name='current_user'),
+    url(r'^critical_list/$', CriticalListViewSet.as_view(), name='critical_list'),
     url(r'^current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
     url('^parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),
     url('^sos/(?P<pk>[^/.]+)/change_status/$', SosStatusChangeViewSet.as_view()),

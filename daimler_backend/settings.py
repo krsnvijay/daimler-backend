@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'import_export',
     'corsheaders',
     'storages',
+    "push_notifications"
 ]
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
@@ -173,3 +174,14 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 AWS_S3_SIGNATURE_VERSION = 's3'
+# FCM Sender ID :883432763386
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "FCM_API_KEY": "AAAAzbCyL_o:APA91bFNaN8v3kGIMhPqWg_aRS0mbHNtzZOPW_NmK0sSz5x3ZPq4BV2jPVDp8a4zTRjbIPuobZ7CN1s1YEVftFuB_4xtTUrSgbWyMvnv63hhwU9B3iGonhJCeBqkQMitoTgBP-24lJp0",
+    # "GCM_API_KEY": "[your api key]",
+    # "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
+    # "APNS_TOPIC": "com.example.push_test",
+    # "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
+    # "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
+}
+# PUB:BJZy3aVYrxbEKeEEqRReRPs_239ZUxj5LCm_E-LRiMrz47IA51VmCyC8A4XpvuaoY5hjYhJ8TT5eA5dEq7F0BZ8
+# PRIV:5tOi9dKR77pqY0uQ5H2PqQbR6YMG1c75A2XgR7izOcA

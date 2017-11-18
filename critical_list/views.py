@@ -1,3 +1,5 @@
+import datetime
+
 import openpyxl
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
@@ -87,3 +89,30 @@ class PartStatusChangeViewSet(APIView):
                 return Response(serializer.errors)
         except Part.DoesNotExist:
             raise Http404
+
+
+class CriticalListViewSet(APIView):
+    """
+    get: Get Shoptypes and their part info
+    """
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+
+    def get(self, request, format=None):
+        shopvalues = 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
+        q = Part.objects.all()
+        date = datetime.datetime.today()
+        x = {}
+        x['total'] = q.filter(short_on=date).count()
+        x['critical'] = q.filter(short_on=date, status=3).count()
+        x['warning'] = q.filter(short_on=date, status=2).count()
+        x['normal'] = q.filter(short_on=date, status=1).count()
+        for shop in shopvalues:
+            x[shop] = {}
+            o = {}
+            o['total'] = q.filter(short_on=date, shop=shop).count()
+            o['critical'] = q.filter(short_on=date, shop=shop, status=3).count()
+            o['warning'] = q.filter(short_on=date, shop=shop, status=2).count()
+            o['normal'] = q.filter(short_on=date, shop=shop, status=1).count()
+            x[shop] = o
+        return Response(x)
