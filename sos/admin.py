@@ -10,7 +10,7 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    search_fields = ['uid', ]
+    search_fields = ['posted_by', 'sosid', 'partid']
     list_display = 'id', 'posted_by', 'content', 'date'
 
 

@@ -5,6 +5,7 @@ from django.urls import reverse
 
 # Create your models here.
 from accounts.models import User
+from critical_list.models import Part
 
 
 class Sos(models.Model):
@@ -39,7 +40,8 @@ class Comment(models.Model):
 
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Original Poster",
                                   related_name='comment_by')
-    sosid = models.ForeignKey(Sos, on_delete=models.CASCADE)
+    sosid = models.ForeignKey(Sos, on_delete=models.CASCADE, blank=True, null=True)
+    partid = models.ForeignKey(Part, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateTimeField(help_text="Enter Level", default=datetime.now)
     content = models.CharField(max_length=100, help_text="Enter Content")
     media = models.FileField(help_text="Media", upload_to='comment/%Y/%m/%d/', blank=True)

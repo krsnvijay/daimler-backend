@@ -25,9 +25,8 @@ class SoSSerializer(serializers.HyperlinkedModelSerializer):
         return obj.users.filter(id=user.id).exists()
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
-    posted_by = serializers.HyperlinkedRelatedField(
+    posted_by = serializers.CharField(
         read_only=True,
-        view_name='user-detail',
         default=serializers.CurrentUserDefault()
     )
     date = serializers.DateTimeField(
