@@ -38,22 +38,22 @@ router.register(r'comments', CommentViewSet)
 router.register(r'logs', LogEntryViewSet)
 router.register(r'device/gcm', GCMDeviceAuthorizedViewSet)
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
-    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^', admin.site.urls),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^upload_file/$', upload_file, name='upload_file'),
+    url(r'^api/', include(router.urls)),
     url(r'^api/schema/$', schema_view),
     url(r'^api/docs/', include_docs_urls(title='Daimler API Documentation', public=False)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', obtain_auth_token),
-    url(r'^upload_file/$', upload_file, name='upload_file'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/current_user/$', CurrentUserViewSet.as_view(), name='current_user'),
     url(r'^api/critical_list/$', CriticalListViewSet.as_view(), name='critical_list'),
     url(r'^api/current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
-    url('^api/parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),
-    url('^api/sos/(?P<pk>[^/.]+)/change_status/$', SosStatusChangeViewSet.as_view()),
-    url('^api/sos/(?P<pk>[^/.]+)/subscribe/$', SosSubscribeViewSet.as_view()),
+    url(r'^api/parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),
+    url(r'^api/sos/(?P<pk>[^/.]+)/change_status/$', SosStatusChangeViewSet.as_view()),
+    url(r'^api/sos/(?P<pk>[^/.]+)/subscribe/$', SosSubscribeViewSet.as_view()),
 
 ]
 if settings.DEBUG:
