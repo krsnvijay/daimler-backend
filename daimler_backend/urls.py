@@ -33,7 +33,7 @@ router = routers.DefaultRouter()
 router.register(r'parts', PartViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
-router.register(r'sos',SosViewSet)
+router.register(r'sos', SosViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'logs', LogEntryViewSet)
 router.register(r'device/gcm', GCMDeviceAuthorizedViewSet)
@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^', admin.site.urls),
+    url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^api/schema/$', schema_view),
     url(r'^api/docs/', include_docs_urls(title='Daimler API Documentation', public=False)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

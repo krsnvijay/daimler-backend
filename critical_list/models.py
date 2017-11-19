@@ -4,7 +4,7 @@ from datetime import datetime
 from django.db import models
 # Create your models here.
 from django.urls import reverse
-from import_export import resources, fields
+from import_export import resources
 
 
 class Part(models.Model):
@@ -58,15 +58,5 @@ class Part(models.Model):
 
 
 class PartResource(resources.ModelResource):
-    part_number = fields.Field(attribute="part_number", column_name='part number')
-    description = fields.Field(attribute="description", column_name='description')
-    supplier_name = fields.Field(attribute="supplier_name", column_name='Supplier Name')
-    eta_dicv = fields.Field(attribute="eta_dicv", column_name='ETA DICV')
-    truck_details = fields.Field(attribute="truck_details", column_name='Truck Details')
-    shortage_reason = fields.Field(attribute="shortage_reason", column_name='Reason for shortage')
-
     class Meta:
         model = Part
-        import_id_fields = ('part_number',)
-        fields = ('part_number', 'description', 'supplier_name', 'eta_dicv', 'truck_details', 'shortage_reason')
-        export_order = ('part_number', 'description', 'supplier_name', 'eta_dicv', 'truck_details', 'shortage_reason')

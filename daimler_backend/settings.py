@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'import_export',
     'corsheaders',
     'storages',
-    "push_notifications"
+    'push_notifications',
+    'rest_auth'
 ]
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
