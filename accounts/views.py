@@ -4,14 +4,14 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group
 from django.http import Http404
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope, OAuth2Authentication
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import User
-from accounts.serializers import GroupSerializer, UserSerializer, LogEntrySerializer
+from accounts.serializers import GroupSerializer, UserSerializer, LogEntrySerializer, PasswordSerializer
 from critical_list.models import Part
 from critical_list.serailizers import PartSerializer
 
@@ -46,6 +46,21 @@ class CurrentUserViewSet(APIView):
 
     def get(self, request):
         return Response(UserSerializer(request.user, context={'request': request}).data)
+
+    def patch(self, request):
+        serializer = PasswordSerializer(data=request.data)
+        user = request.user
+        if serializer.is_valid():
+            if not user.check_password(serializer.data.get('old_password')):
+                return Response({'detail': 'Old password is incorrect'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            user.set_password(serializer.data.get('new_password'))
+            user.save()
+            return Response({'detail': 'new password set'}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class StarredPartsViewSet(APIView):

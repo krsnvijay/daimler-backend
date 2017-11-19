@@ -6,9 +6,8 @@ from sos.models import Sos, Comment
 
 class SoSSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
-    posted_by = serializers.HyperlinkedRelatedField(
+    posted_by = serializers.CharField(
         read_only=True,
-        view_name='user-detail',
         default=serializers.CurrentUserDefault()
     )
     date = serializers.DateTimeField(
