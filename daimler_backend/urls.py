@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^', admin.site.urls),
+    url(r'^', include('django.contrib.auth.urls')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^api/schema/$', schema_view),
     url(r'^api/docs/', include_docs_urls(title='Daimler API Documentation', public=False)),
