@@ -19,7 +19,6 @@ from critical_list.models import Part
 from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
 
-from models import Part
 
 def get_starred_parts(request):
     user = request.user
@@ -88,7 +87,7 @@ def handle_uploaded_file(f):
         x['reported_on'] = ws['B' + str(row)].value
         x['short_on'] = ws['C' + str(row)].value
         x['shop'] = ws['D' + str(row)].value
-        print  ws['D' + str(row)].value
+        print(ws['D' + str(row)].value)
         x['variants'] = ws['E' + str(row)].value
         # x['count'] = ws['' + str(row)].value
         x['part_number'] = ws['G' + str(row)].value

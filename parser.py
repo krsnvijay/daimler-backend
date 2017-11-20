@@ -42,4 +42,4 @@ def handle_uploaded_file():
     return part_list
 
 
-print handle_uploaded_file()
+print(handle_uploaded_file())
