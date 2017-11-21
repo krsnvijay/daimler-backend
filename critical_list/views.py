@@ -19,7 +19,6 @@ from critical_list.models import Part
 from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
 
-from models import Part
 from threading import Thread
 from django.core.files.storage import FileSystemStorage
 EXCEL_SHEET = ""
