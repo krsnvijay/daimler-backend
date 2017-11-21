@@ -12,3 +12,4 @@ class PartAdmin(ImportExportModelAdmin):
     list_filter = ('supplier_name', 'truck_details', 'status', 'shop')
     list_display = (
         'part_number', 'description', 'supplier_name', 'eta_dicv', 'truck_details', 'shortage_reason', 'status')
+

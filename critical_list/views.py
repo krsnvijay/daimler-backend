@@ -19,6 +19,10 @@ from critical_list.models import Part
 from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
 
+from models import Part
+from threading import Thread
+from django.core.files.storage import FileSystemStorage
+EXCEL_SHEET = ""
 
 def get_starred_parts(request):
     user = request.user
@@ -70,24 +74,25 @@ def convertToDB(records):
         entry.status = record['status']
         entry.save()
 
-def handle_uploaded_file(f):
-    wb = openpyxl.load_workbook(f)
+def handle_uploaded_file(url):
+    f = EXCEL_SHEET
+    # print (f.temporary_file_path())
+    wb = openpyxl.load_workbook(open(".." + url, "rb"))
     ws = wb['Dataset']
 
     part_list = []
     for row in range(3, ws.max_row + 1):
         x = {}
-        if ws['A' + str(row)].font.color == "#110000" or ws['A' + str(row)].font.color == "#100":
+        if ws['A' + str(row)].font.color.rgb == "FFFF0000":
             x['status'] = 3
-        elif ws['A' + str(row)].font.color == "#111100" or ws['A' + str(row)].font.color == "#110":
-            x['status'] = 2
+        # elif ws['A' + str(row)].font.color == "#111100" or ws['A' + str(row)].font.color == "#110":
+        #     x['status'] = 2
         else:
             x['status'] = 1
         
         x['reported_on'] = ws['B' + str(row)].value
         x['short_on'] = ws['C' + str(row)].value
         x['shop'] = ws['D' + str(row)].value
-        print(ws['D' + str(row)].value)
         x['variants'] = ws['E' + str(row)].value
         # x['count'] = ws['' + str(row)].value
         x['part_number'] = ws['G' + str(row)].value
@@ -112,10 +117,17 @@ def handle_uploaded_file(f):
     return part_list
 
 def upload_file(request):
+    global EXCEL_SHEET
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            return JsonResponse(handle_uploaded_file(request.FILES['file']), safe=False)
+            # EXCEL_SHEET = request.FILES['file']
+            # fs = FileSystemStorage()
+            # filename = fs.save('uploadedFiles/'+ EXCEL_SHEET.name, EXCEL_SHEET)
+            # uploaded_file_url = fs.url(filename)
+            # thread = Thread(target=handle_uploaded_file, args=[uploaded_file_url])
+            # thread.start()
+            return JsonResponse({"Status": 200, "message": "Successfully uploaded the file"}, safe=False)
     else:
         form = UploadFileForm()
     return render(request, 'upload.html', {'form': form})
