@@ -59,4 +59,5 @@ class Part(models.Model):
 
 class PartResource(resources.ModelResource):
     class Meta:
+        import_id_fields = ('part_number',)
         model = Part
