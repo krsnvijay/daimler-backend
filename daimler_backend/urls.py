@@ -24,7 +24,8 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
-from critical_list.views import PartViewSet, PartStatusChangeViewSet, CriticalListViewSet, PartNotificationViewSet
+from critical_list.views import PartViewSet, PartStatusChangeViewSet, CriticalListViewSet, PartNotificationViewSet, \
+    CriticalPartsViewSet
 from critical_list.views import upload_file
 from sos.views import SosViewSet, CommentViewSet, SosStatusChangeViewSet, SosSubscribeViewSet
 
@@ -50,6 +51,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/current_user/$', CurrentUserViewSet.as_view(), name='current_user'),
     url(r'^api/critical_list/$', CriticalListViewSet.as_view(), name='critical_list'),
+    url(r'^api/critical_list/critical_parts/$', CriticalPartsViewSet.as_view(), name='critical_list'),
     url(r'^api/critical_list/part_notification/$', PartNotificationViewSet.as_view(), name='part_notification'),
     url(r'^api/current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
     url(r'^api/parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),

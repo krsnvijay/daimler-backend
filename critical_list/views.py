@@ -178,6 +178,24 @@ class CriticalListViewSet(APIView):
         return Response(x)
 
 
+class CriticalPartsViewSet(APIView):
+    """
+    get: Get Sorted Critical list starred>status
+    """
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+
+    def get(self, request, format=None):
+        q = Part.objects.all()
+        date = datetime.datetime.today()
+        serializer = PartSerializer(
+            sorted(
+                set(list(request.user.starred_parts.filter(short_on=date)) + list(q.filter(short_on=date, status=3))),
+                key=bool), many=True,
+            context={'request': request})
+        return Response(serializer.data)
+
+
 class PartNotificationViewSet(APIView):
     """
     post: Send Notification and star a part to a particular user(userid,partid,content required)
