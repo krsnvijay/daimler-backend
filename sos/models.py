@@ -42,6 +42,7 @@ class Comment(models.Model):
                                   related_name='comment_by')
     sosid = models.ForeignKey(Sos, on_delete=models.CASCADE, blank=True, null=True)
     partid = models.ForeignKey(Part, on_delete=models.CASCADE, blank=True, null=True)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateTimeField(help_text="Enter Level", default=datetime.now)
     content = models.CharField(max_length=100, help_text="Enter Content")
     media = models.FileField(help_text="Media", upload_to='comment/%Y/%m/%d/', blank=True)

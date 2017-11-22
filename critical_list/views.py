@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication, IsAuthenticatedOrTokenHasScope
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import DjangoModelPermissions
@@ -18,10 +18,10 @@ from critical_list.forms import UploadFileForm
 from critical_list.models import Part
 from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
+from sos.serializers import PartNotificationSerializer
 
-from threading import Thread
-from django.core.files.storage import FileSystemStorage
 EXCEL_SHEET = ""
+
 
 def get_starred_parts(request):
     user = request.user
@@ -46,8 +46,8 @@ class PartViewSet(viewsets.ModelViewSet):
     ordering_fields = ('shop', 'short_on', 'status')
     filter_class = PartFilter
 
-def convertToDB(records):
 
+def convertToDB(records):
     for record in records:
         entry = Part()
         entry.part_number = record['part_number']
@@ -73,6 +73,7 @@ def convertToDB(records):
         entry.status = record['status']
         entry.save()
 
+
 def handle_uploaded_file(url):
     f = EXCEL_SHEET
     # print (f.temporary_file_path())
@@ -88,7 +89,7 @@ def handle_uploaded_file(url):
         #     x['status'] = 2
         else:
             x['status'] = 1
-        
+
         x['reported_on'] = ws['B' + str(row)].value
         x['short_on'] = ws['C' + str(row)].value
         x['shop'] = ws['D' + str(row)].value
@@ -109,11 +110,12 @@ def handle_uploaded_file(url):
         x['eta_dicv'] = ws['V' + str(row)].value
         x['truck_details'] = ws['W' + str(row)].value
         x['shortage_reason'] = ws['X' + str(row)].value
-                
+
         part_list.append(x)
 
     # convertToDB(part_list)
     return part_list
+
 
 def upload_file(request):
     global EXCEL_SHEET
@@ -174,3 +176,24 @@ class CriticalListViewSet(APIView):
             o['normal'] = q.filter(short_on=date, shop=shop, status=1).count()
             x[shop] = o
         return Response(x)
+
+
+class PartNotificationViewSet(APIView):
+    """
+    post: Send Notification and star a part to a particular user(userid,partid,content required)
+    """
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+
+    def post(self, request, format=None):
+        serializer = PartNotificationSerializer(data=request.data, context={'request': request})
+        if (serializer.is_valid()):
+            comment = serializer.save()
+            user = comment.userid
+            print(comment.partid)
+            user.starred_parts.add(comment.partid)
+            user.save()
+            return Response({'Notification Sent to ' + user.first_name + ' about part ' + comment.partid.part_number},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
