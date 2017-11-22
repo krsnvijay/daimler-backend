@@ -1,6 +1,8 @@
 import datetime
+from threading import Thread
 
 import openpyxl
+from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
 # Create your views here.
@@ -20,8 +22,6 @@ from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
 from sos.serializers import PartNotificationSerializer
 
-from django.core.files.storage import FileSystemStorage
-from threading import Thread
 
 def get_starred_parts(request):
     user = request.user
@@ -121,15 +121,15 @@ def upload_file(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             fs = FileSystemStorage()
-            filename = fs.save('uploaded_sheets/'+ request.FILES['file'].name, request.FILES['file'])
+            filename = fs.save('uploaded_sheets/' + request.FILES['file'].name, request.FILES['file'])
             uploaded_file_url = fs.url(filename)
             thread = Thread(target=handle_uploaded_file, args=[uploaded_file_url])
             thread.start()
             return JsonResponse({
-                    "Status": 200, 
-                    "message": "Successfully uploaded the file",
-                    "file_url": uploaded_file_url
-                }, safe=False)
+                "Status": 200,
+                "message": "Successfully uploaded the file",
+                "file_url": uploaded_file_url
+            }, safe=False)
     else:
         form = UploadFileForm()
     return render(request, 'upload.html', {'form': form})
@@ -189,12 +189,9 @@ class CriticalPartsViewSet(APIView):
     def get(self, request, format=None):
         q = Part.objects.all()
         date = datetime.datetime.today()
-        serializer = PartSerializer(
-            sorted(
-                set(list(request.user.starred_parts.filter(short_on=date)) + list(q.filter(short_on=date, status=3))),
-                key=bool), many=True,
-            context={'request': request})
-        return Response(serializer.data)
+        parts = set(list(request.user.starred_parts.filter(short_on=date)) + list(q.filter(short_on=date, status=3)))
+        serializer = PartSerializer(parts, many=True, context={'request': request})
+        return Response(sorted(serializer.data, key=lambda item: item['starred'], reverse=True))
 
 
 class PartNotificationViewSet(APIView):
