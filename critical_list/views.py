@@ -20,8 +20,8 @@ from critical_list.permissions import IsManagerOrReadOnly
 from critical_list.serailizers import PartSerializer
 from sos.serializers import PartNotificationSerializer
 
-EXCEL_SHEET = ""
-
+from django.core.files.storage import FileSystemStorage
+from threading import Thread
 
 def get_starred_parts(request):
     user = request.user
@@ -75,9 +75,8 @@ def convertToDB(records):
 
 
 def handle_uploaded_file(url):
-    f = EXCEL_SHEET
     # print (f.temporary_file_path())
-    wb = openpyxl.load_workbook(open(".." + url, "rb"))
+    wb = openpyxl.load_workbook(open("." + url, "rb"))
     ws = wb['Dataset']
 
     part_list = []
@@ -118,17 +117,19 @@ def handle_uploaded_file(url):
 
 
 def upload_file(request):
-    global EXCEL_SHEET
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            # EXCEL_SHEET = request.FILES['file']
-            # fs = FileSystemStorage()
-            # filename = fs.save('uploadedFiles/'+ EXCEL_SHEET.name, EXCEL_SHEET)
-            # uploaded_file_url = fs.url(filename)
-            # thread = Thread(target=handle_uploaded_file, args=[uploaded_file_url])
-            # thread.start()
-            return JsonResponse({"Status": 200, "message": "Successfully uploaded the file"}, safe=False)
+            fs = FileSystemStorage()
+            filename = fs.save('uploaded_sheets/'+ request.FILES['file'].name, request.FILES['file'])
+            uploaded_file_url = fs.url(filename)
+            thread = Thread(target=handle_uploaded_file, args=[uploaded_file_url])
+            thread.start()
+            return JsonResponse({
+                    "Status": 200, 
+                    "message": "Successfully uploaded the file",
+                    "file_url": uploaded_file_url
+                }, safe=False)
     else:
         form = UploadFileForm()
     return render(request, 'upload.html', {'form': form})
