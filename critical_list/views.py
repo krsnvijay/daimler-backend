@@ -162,21 +162,27 @@ class CriticalListViewSet(APIView):
     def get(self, request, format=None):
         shopvalues = 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
         q = Part.objects.all()
-        date = datetime.datetime.today()
-        x = {}
-        x['total'] = q.filter(short_on=date).count()
-        x['critical'] = q.filter(short_on=date, status=3).count()
-        x['warning'] = q.filter(short_on=date, status=2).count()
-        x['normal'] = q.filter(short_on=date, status=1).count()
-        for shop in shopvalues:
-            x[shop] = {}
-            o = {}
-            o['total'] = q.filter(short_on=date, shop=shop).count()
-            o['critical'] = q.filter(short_on=date, shop=shop, status=3).count()
-            o['warning'] = q.filter(short_on=date, shop=shop, status=2).count()
-            o['normal'] = q.filter(short_on=date, shop=shop, status=1).count()
-            x[shop] = o
-        return Response(x)
+        try:
+            date = self.request.query_params.get('short_on', datetime.datetime.today())
+            x = {}
+            x['total'] = q.filter(short_on=date).count()
+            x['critical'] = q.filter(short_on=date, status=3).count()
+            x['warning'] = q.filter(short_on=date, status=2).count()
+            x['normal'] = q.filter(short_on=date, status=1).count()
+            for shop in shopvalues:
+                x[shop] = {}
+                o = {}
+                o['total'] = q.filter(short_on=date, shop=shop).count()
+                o['critical'] = q.filter(short_on=date, shop=shop, status=3).count()
+                o['warning'] = q.filter(short_on=date, shop=shop, status=2).count()
+                o['normal'] = q.filter(short_on=date, shop=shop, status=1).count()
+                x[shop] = o
+            return Response(x)
+        except ValueError:
+            return Response({'detail': 'Invalid date format should be of form YYYY-MM-DD'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class CriticalPartsViewSet(APIView):
@@ -188,10 +194,15 @@ class CriticalPartsViewSet(APIView):
 
     def get(self, request, format=None):
         q = Part.objects.all()
-        date = datetime.datetime.today()
-        parts = set(list(request.user.starred_parts.filter(short_on=date)) + list(q.filter(short_on=date, status=3)))
-        serializer = PartSerializer(parts, many=True, context={'request': request})
-        return Response(sorted(serializer.data, key=lambda item: item['starred'], reverse=True))
+        try:
+            date = self.request.query_params.get('short_on', datetime.datetime.today())
+            parts = set(
+                list(request.user.starred_parts.filter(short_on=date)) + list(q.filter(short_on=date, status=3)))
+            serializer = PartSerializer(parts, many=True, context={'request': request})
+            return Response(sorted(serializer.data, key=lambda item: item['starred'], reverse=True))
+        except ValueError:
+            return Response({'detail': 'Invalid date format should be of form YYYY-MM-DD'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class PartNotificationViewSet(APIView):
