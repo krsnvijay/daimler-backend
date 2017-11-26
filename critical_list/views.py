@@ -43,7 +43,7 @@ class PartViewSet(viewsets.ModelViewSet):
     serializer_class = PartSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     search_fields = ('part_number',)
-    ordering_fields = ('shop', 'short_on', 'status')
+    ordering_fields = ('shop', 'short_on', 'status', 'pmc')
     filter_class = PartFilter
 
 
