@@ -72,7 +72,7 @@ class Part(models.Model):
     quantity = models.IntegerField(help_text='Enter Quantity Avl DICV')
     quantity_expected = models.IntegerField(help_text='Enter quantity expected')
     planned_vehicle_qty = models.IntegerField(help_text='Enter planned vehicle quantity')
-    eta_dicv = models.CharField(help_text='Enter ETA')
+    eta_dicv = models.CharField(max_length=50, help_text='Enter ETA')
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details', null=True, blank=True)
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage', null=True, blank=True)
     status = models.IntegerField(choices=status_values, help_text='Select the part Status', default=NORMAL)
