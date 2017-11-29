@@ -29,7 +29,15 @@ def get_starred_parts(request):
 
 
 class PartFilter(filters.FilterSet):
+    pmcvalues = (
+        ('Arulselvan', 'HDT ENGINE'),
+        ('Balaji', 'TRANSMISSION'),
+        ('Joshna', 'AXLE'),
+        ('Giftson', 'MDT ENGINE'),
+        ('Premkumar', 'CASTING AND FORGING'),
+    )
     daterange = filters.DateFromToRangeFilter(name="short_on")
+    pmc = filters.ChoiceFilter(choices=pmcvalues)
 
     class Meta:
         model = Part
@@ -160,7 +168,13 @@ class CriticalListViewSet(APIView):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
 
     def get(self, request, format=None):
-        shopvalues = 'MDT ENGINE', 'HDT ENGINE', 'TRANSMISSION', 'CASTING AND FORGING', 'AXLE'
+        values = {
+            'Arulselvan': 'HDT ENGINE',
+            'Balaji': 'TRANSMISSION',
+            'Joshna': 'AXLE',
+            'Giftson': 'MDT ENGINE',
+            'Premkumar': 'CASTING AND FORGING',
+        }
         q = Part.objects.all()
         try:
             date = self.request.query_params.get('short_on', datetime.datetime.today())
@@ -169,14 +183,16 @@ class CriticalListViewSet(APIView):
             x['critical'] = q.filter(short_on=date, status=3).count()
             x['warning'] = q.filter(short_on=date, status=2).count()
             x['normal'] = q.filter(short_on=date, status=1).count()
-            for shop in shopvalues:
-                x[shop] = {}
+            for shop in values.keys():
+                pmc = values[shop]
+                x[pmc] = {}
                 o = {}
-                o['total'] = q.filter(short_on=date, shop=shop).count()
-                o['critical'] = q.filter(short_on=date, shop=shop, status=3).count()
-                o['warning'] = q.filter(short_on=date, shop=shop, status=2).count()
-                o['normal'] = q.filter(short_on=date, shop=shop, status=1).count()
-                x[shop] = o
+                o['pmc'] = shop
+                o['total'] = q.filter(short_on=date, pmc=pmc).count()
+                o['critical'] = q.filter(short_on=date, pmc=pmc, status=3).count()
+                o['warning'] = q.filter(short_on=date, pmc=pmc, status=2).count()
+                o['normal'] = q.filter(short_on=date, pmc=pmc, status=1).count()
+                x[pmc] = o
             return Response(x)
         except ValueError:
             return Response({'detail': 'Invalid date format should be of form YYYY-MM-DD'},

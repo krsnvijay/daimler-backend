@@ -8,8 +8,13 @@ from import_export import resources
 
 
 class Part(models.Model):
-    values = (('MDT ENGINE', 'MDT ENGINE'), ('HDT ENGINE', 'HDT ENGINE'), ('TRANSMISSION', 'TRANSMISSION'), (
-        'CASTING AND FORGING', 'CASTING AND FORGING'), ('AXLE', 'AXLE'))
+    values = (
+        ('Arulselvan', 'HDT ENGINE'),
+        ('Balaji', 'TRANSMISSION'),
+        ('Joshna', 'AXLE'),
+        ('Giftson', 'MDT ENGINE'),
+        ('Premkumar', 'CASTING AND FORGING'),
+    )
     CRITICAL = 3
     WARNING = 2
     NORMAL = 1
@@ -18,6 +23,7 @@ class Part(models.Model):
         (WARNING, 'Warning'),
         (CRITICAL, 'Critical'),
     )
+
 
     class Meta:
         ordering = ["-part_number"]
@@ -32,8 +38,8 @@ class Part(models.Model):
     count = models.IntegerField(help_text='Enter count')
     reported_on = models.DateField(max_length=30, help_text='Reported on', default=datetime.now)
     short_on = models.DateField(max_length=30, help_text='Short on', default=datetime.now)
-    shop = models.CharField(max_length=30, help_text='Enter Text')
-    pmc = models.CharField(max_length=20, choices=values, help_text='Enter PMC')
+    shop = models.CharField(max_length=30, help_text='Enter Shop')
+    pmc = models.CharField(max_length=20, choices=values, help_text='Choose PMC')
     team = models.CharField(max_length=20, help_text='Enter Team')
     backlog = models.CharField(max_length=10, help_text='Enter Backlog')
     region = models.CharField(max_length=10, help_text='Enter Region')
