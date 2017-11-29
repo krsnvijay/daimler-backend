@@ -33,7 +33,7 @@ class PartFilter(filters.FilterSet):
 
     class Meta:
         model = Part
-        fields = ['shop', 'status', 'daterange', 'short_on']
+        fields = ['shop', 'status', 'daterange', 'short_on', 'pmc']
 
 
 class PartViewSet(viewsets.ModelViewSet):
