@@ -181,7 +181,7 @@ AWS_S3_SIGNATURE_VERSION = 's3'
 # FCM Sender ID :883432763386
 UPDATE_ON_DUPLICATE_REG_ID = True
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "FCM_API_KEY": "AAAAzbCyL_o:APA91bFNaN8v3kGIMhPqWg_aRS0mbHNtzZOPW_NmK0sSz5x3ZPq4BV2jPVDp8a4zTRjbIPuobZ7CN1s1YEVftFuB_4xtTUrSgbWyMvnv63hhwU9B3iGonhJCeBqkQMitoTgBP-24lJp0",
+    "FCM_API_KEY": "AAAAYrUxRL0:APA91bHgV7YFhrc5h4GtHg-TV_t7yhCksAiUaqaiDCHtVeyyFVSfGENm4cNBlbdGyYs5ZMqoe1u1EhpVIxIhY_NQtW2s-eFpgvi_jJaxCnuqwz7mZursicWONM8tnnAnMtuxjPlXdjvs",
     "FCM_ERROR_TIMEOUT": 3600,
     # "GCM_API_KEY": "[your api key]",
     # "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
