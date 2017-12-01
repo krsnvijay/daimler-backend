@@ -182,6 +182,7 @@ AWS_S3_SIGNATURE_VERSION = 's3'
 UPDATE_ON_DUPLICATE_REG_ID = True
 PUSH_NOTIFICATIONS_SETTINGS = {
     "FCM_API_KEY": "AAAAzbCyL_o:APA91bFNaN8v3kGIMhPqWg_aRS0mbHNtzZOPW_NmK0sSz5x3ZPq4BV2jPVDp8a4zTRjbIPuobZ7CN1s1YEVftFuB_4xtTUrSgbWyMvnv63hhwU9B3iGonhJCeBqkQMitoTgBP-24lJp0",
+    "FCM_ERROR_TIMEOUT": 3600,
     # "GCM_API_KEY": "[your api key]",
     # "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
     # "APNS_TOPIC": "com.example.push_test",
