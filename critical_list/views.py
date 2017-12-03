@@ -188,10 +188,10 @@ class CriticalListViewSet(APIView):
                 x[pmc] = {}
                 o = {}
                 o['pmc'] = shop
-                o['total'] = q.filter(short_on=date, pmc=pmc).count()
-                o['critical'] = q.filter(short_on=date, pmc=pmc, status=3).count()
-                o['warning'] = q.filter(short_on=date, pmc=pmc, status=2).count()
-                o['normal'] = q.filter(short_on=date, pmc=pmc, status=1).count()
+                o['total'] = q.filter(short_on=date, pmc=values[shop]).count()
+                o['critical'] = q.filter(short_on=date, pmc=values[shop], status=3).count()
+                o['warning'] = q.filter(short_on=date, pmc=values[shop], status=2).count()
+                o['normal'] = q.filter(short_on=date, pmc=values[shop], status=1).count()
                 x[pmc] = o
             return Response(x)
         except ValueError:
