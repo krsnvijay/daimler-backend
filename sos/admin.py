@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from sos.models import Comment, Sos
+from sos.models import Comment
 
 
 class CommentInline(admin.TabularInline):
@@ -10,13 +10,6 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    search_fields = ['posted_by', 'sosid', 'partid']
+    search_fields = ['posted_by', 'partid']
     list_display = 'id', 'posted_by', 'content', 'date'
 
-
-@admin.register(Sos)
-class SosAdmin(admin.ModelAdmin):
-    inlines = (CommentInline,)
-    search_fields = ['id', 'posted_by']
-    list_filter = ('level',)
-    list_display = 'id', 'name', 'posted_by', 'content', 'level', 'status', 'date',

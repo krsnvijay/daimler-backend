@@ -27,14 +27,13 @@ from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEnt
 from critical_list.views import PartViewSet, PartStatusChangeViewSet, CriticalListViewSet, PartNotificationViewSet, \
     CriticalPartsViewSet
 from critical_list.views import upload_file
-from sos.views import SosViewSet, CommentViewSet, SosStatusChangeViewSet, SosSubscribeViewSet
+from sos.views import CommentViewSet
 
 schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
 router.register(r'parts', PartViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
-router.register(r'sos', SosViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'logs', LogEntryViewSet)
 router.register(r'device/gcm', GCMDeviceAuthorizedViewSet)
@@ -55,8 +54,6 @@ urlpatterns = [
     url(r'^api/critical_list/part_notification/$', PartNotificationViewSet.as_view(), name='part_notification'),
     url(r'^api/current_user/starred_parts/$', StarredPartsViewSet.as_view(), name='starred_parts'),
     url(r'^api/parts/(?P<pk>[^/.]+)/change_status/$', PartStatusChangeViewSet.as_view()),
-    url(r'^api/sos/(?P<pk>[^/.]+)/change_status/$', SosStatusChangeViewSet.as_view()),
-    url(r'^api/sos/(?P<pk>[^/.]+)/subscribe/$', SosSubscribeViewSet.as_view()),
 
 ]
 if settings.DEBUG:
