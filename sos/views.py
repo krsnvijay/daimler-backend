@@ -18,4 +18,4 @@ class CommentViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser,)
     serializer_class = CommentSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('posted_by', 'sosid', 'date', 'partid', 'userid')
+    filter_fields = ('posted_by', 'date', 'partid', 'userid')
