@@ -1,3 +1,4 @@
+import jsonfield
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import AbstractUser
@@ -34,3 +35,18 @@ class User(AbstractUser):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+class Subscription(models.Model):
+    subscription_id = jsonfield.JSONField()
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE,
+                                   primary_key=True, )
+
+    def __str__(self):
+        return self.user_id.username
+
+    def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of MyModelName.
+        """
+        return reverse('subscription-detail', args=[str(self.id)])

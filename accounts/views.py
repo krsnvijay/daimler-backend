@@ -10,8 +10,8 @@ from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import User
-from accounts.serializers import GroupSerializer, UserSerializer, LogEntrySerializer
+from accounts.models import User, Subscription
+from accounts.serializers import GroupSerializer, UserSerializer, LogEntrySerializer, SubscriptionSerializer
 from critical_list.models import Part
 from critical_list.serailizers import PartSerializer
 
@@ -30,6 +30,12 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]
+    # permission_classes = [permissions.IsAuthenticated, TokenHasScope]
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
 
 class LogEntryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]

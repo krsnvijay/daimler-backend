@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from accounts.models import Subscription
 from critical_list.models import Part
 from sos.models import Comment
 
@@ -18,3 +19,9 @@ class PartSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_comments(self, obj):
         return Comment.objects.filter(partid=obj.part_number, type=False).count()
+
+
+class SubscriptionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = '__all__'

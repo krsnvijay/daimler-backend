@@ -25,7 +25,7 @@ from rest_framework.schemas import get_schema_view
 
 from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
 from critical_list.views import PartViewSet, PartStatusChangeViewSet, CriticalListViewSet, PartNotificationViewSet, \
-    CriticalPartsViewSet
+    CriticalPartsViewSet, SubscriptionViewSet
 from critical_list.views import upload_file
 from sos.views import CommentViewSet
 
@@ -33,6 +33,7 @@ schema_view = get_schema_view(title='Daimler API')
 router = routers.DefaultRouter()
 router.register(r'parts', PartViewSet)
 router.register(r'users', UserViewSet)
+router.register(r'subscriptions', SubscriptionViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'logs', LogEntryViewSet)

@@ -4,7 +4,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from accounts.models import User
+from accounts.models import User, Subscription
 
 
 class UserCreationForm(forms.ModelForm):
@@ -100,4 +100,5 @@ class LogEntryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(Subscription)
 admin.site.register(LogEntry, LogEntryAdmin)

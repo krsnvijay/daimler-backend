@@ -16,7 +16,7 @@ class Comment(models.Model):
                                   related_name='comment_by')
     partid = models.ForeignKey(Part, on_delete=models.CASCADE)
     userid = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    date = models.DateTimeField(help_text="Enter Level", default=datetime.now)
+    date = models.DateTimeField(help_text="posted at", default=datetime.now)
     content = models.CharField(max_length=100, help_text="Enter Content")
     media = models.FileField(help_text="Media", upload_to='comment/%Y/%m/%d/', blank=True)
     type = models.BooleanField(help_text="Part or Notification", default=False)

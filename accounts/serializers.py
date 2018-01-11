@@ -1,9 +1,9 @@
 from django.contrib.admin.models import LogEntry
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 # first we define the serializers
-from accounts.models import User
+from accounts.models import User, Subscription
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,3 +28,13 @@ class LogEntrySerializer(serializers.HyperlinkedModelSerializer):
         model = LogEntry
         fields = '__all__'
 
+
+class SubscriptionSerializer(serializers.HyperlinkedModelSerializer):
+    user_id = serializers.CharField(
+        read_only=True,
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Subscription
+        fields = '__all__'

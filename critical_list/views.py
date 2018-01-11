@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication, IsAuthenticatedOrTokenHasScope
+from pywebpush import webpush, WebPushException
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.filters import OrderingFilter
@@ -16,10 +17,11 @@ from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import Subscription
 from critical_list.forms import UploadFileForm
 from critical_list.models import Part
 from critical_list.permissions import IsManagerOrReadOnly
-from critical_list.serailizers import PartSerializer
+from critical_list.serailizers import PartSerializer, SubscriptionSerializer
 from sos.serializers import PartNotificationSerializer
 
 
@@ -53,6 +55,13 @@ class PartViewSet(viewsets.ModelViewSet):
     search_fields = ('part_number',)
     ordering_fields = ('shop', 'short_on', 'status', 'pmc')
     filter_class = PartFilter
+
+
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
+    permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
 
 
 def convertToDB(records):
@@ -199,8 +208,6 @@ class CriticalListViewSet(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class CriticalPartsViewSet(APIView):
     """
     get: Get Sorted Critical list starred>status
@@ -236,6 +243,20 @@ class PartNotificationViewSet(APIView):
             print(comment.partid)
             user.starred_parts.add(comment.partid)
             user.save()
+            # TODO implement webpush
+            try:
+                subscription = Subscription.objects.get(user_id=user)
+                webpush(subscription_info=subscription.subscription_id,
+                        data="You've been notified of part {part}-{shop}-{status} by {poster}".format(
+                            part=comment.partid.part_number, poster=comment.posted_by.username,
+                            shop=comment.partid.shop, status=Part.status_values[comment.partid.status]),
+                        vapid_private_key="5tOi9dKR77pqY0uQ5H2PqQbR6YMG1c75A2XgR7izOcA",
+                        vapid_claims={
+                            "sub": "mailto:YourNameHere@example.org",
+                        })
+            except WebPushException as ex:
+                print("Push Notification not sent {}", repr(ex))
+
             return Response({'Notification Sent to ' + user.first_name + ' about part ' + comment.partid.part_number},
                             status=status.HTTP_200_OK)
         else:
