@@ -31,7 +31,6 @@ class LogEntrySerializer(serializers.HyperlinkedModelSerializer):
 
 class SubscriptionSerializer(serializers.HyperlinkedModelSerializer):
     user_id = serializers.CharField(
-        read_only=True,
         default=serializers.CurrentUserDefault()
     )
 
