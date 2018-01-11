@@ -31,9 +31,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+
 class SubscriptionViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
     permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]
-    # permission_classes = [permissions.IsAuthenticated, TokenHasScope]
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
 

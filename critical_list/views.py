@@ -21,7 +21,7 @@ from accounts.models import Subscription
 from critical_list.forms import UploadFileForm
 from critical_list.models import Part
 from critical_list.permissions import IsManagerOrReadOnly
-from critical_list.serailizers import PartSerializer, SubscriptionSerializer
+from critical_list.serailizers import PartSerializer
 from sos.serializers import PartNotificationSerializer
 
 
@@ -56,12 +56,6 @@ class PartViewSet(viewsets.ModelViewSet):
     ordering_fields = ('shop', 'short_on', 'status', 'pmc')
     filter_class = PartFilter
 
-
-class SubscriptionViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication, OAuth2Authentication, SessionAuthentication)
-    permission_classes = [IsAuthenticatedOrTokenHasScope, DjangoModelPermissions]
-    queryset = Subscription.objects.all()
-    serializer_class = SubscriptionSerializer
 
 
 def convertToDB(records):

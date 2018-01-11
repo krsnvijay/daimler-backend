@@ -23,9 +23,10 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet
+from accounts.views import UserViewSet, GroupViewSet, CurrentUserViewSet, LogEntryViewSet, StarredPartsViewSet, \
+    SubscriptionViewSet
 from critical_list.views import PartViewSet, PartStatusChangeViewSet, CriticalListViewSet, PartNotificationViewSet, \
-    CriticalPartsViewSet, SubscriptionViewSet
+    CriticalPartsViewSet
 from critical_list.views import upload_file
 from sos.views import CommentViewSet
 
