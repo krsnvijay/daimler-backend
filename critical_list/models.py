@@ -80,7 +80,7 @@ class Part(models.Model):
     truck_details = models.CharField(max_length=30, help_text='Enter Truck Details', null=True, blank=True)
     shortage_reason = models.CharField(max_length=100, help_text='Enter Reason For Shortage', null=True, blank=True)
     status = models.IntegerField(choices=status_values, help_text='Select the part Status', default=NORMAL)
-    thread_status = models.IntegerField(choices=thread_status_values, help_text='Select the thread Status',
+    thread_status = models.BooleanField(choices=thread_status_values, help_text='Select the thread Status',
                                         default=True)
 
     def __str__(self):
